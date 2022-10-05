@@ -1,4 +1,4 @@
-package net.emiliollbb.listacc;
+package com.durangoretro.rescomp;
 
 import java.util.Collections;
 import java.util.Comparator;
