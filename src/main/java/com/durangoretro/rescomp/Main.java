@@ -1,8 +1,7 @@
 package com.durangoretro.rescomp;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.File;
+import java.io.FileOutputStream;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -14,16 +13,22 @@ import org.apache.commons.cli.ParseException;
 
 public class Main {
 	
+	private static final String BACKGROUND = "BACKGROUND";
+	
 	public static void main(String[] args) throws Exception {
 		Options options = new Options();
 
-		Option user = new Option("o", "output", true, "File output");
-        user.setRequired(true);
-        options.addOption(user);
+		Option inputOption = new Option("i", "input", true, "File input");
+        inputOption.setRequired(true);
+        options.addOption(inputOption);
         
-        Option password = new Option("f", "format", true, "Format to generate");
-        password.setRequired(true);
-        options.addOption(password);
+		Option outputOption = new Option("o", "output", true, "File output");
+        outputOption.setRequired(true);
+        options.addOption(outputOption);
+        
+        Option modeOption = new Option("m", "mode", true, "Working mode, BACKGROUND");
+        modeOption.setRequired(true);
+        options.addOption(modeOption);
                 
 
         CommandLineParser parser = new DefaultParser();
@@ -40,10 +45,22 @@ public class Main {
             return;
         }
 
-        String o = cmd.getOptionValue("output");
-        String f = cmd.getOptionValue("format");
+        String sourceFile = cmd.getOptionValue("input");
+        String outputFile = cmd.getOptionValue("output");
+        String mode = cmd.getOptionValue("mode");
         
+        if(mode.equalsIgnoreCase(BACKGROUND)) {
+        	compileBackground(sourceFile, outputFile);
+        }
 	}
-	
+
+	private static void compileBackground(String sourceFile, String outputFile) throws Exception {
+		final File file = new File(sourceFile);
+        byte[] pixels = ImageGenerator.convertToDurango(file);
+		byte [] encoded = new RLEEncoder().encode(2, pixels);
+        FileOutputStream out = new FileOutputStream(new File(outputFile));
+        out.write(ImageGenerator.getHexString(encoded).getBytes());		        
+		out.close();		
+	}	
 	
 }

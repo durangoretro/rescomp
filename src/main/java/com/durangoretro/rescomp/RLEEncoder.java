@@ -1,10 +1,7 @@
 package com.durangoretro.rescomp;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
 
 public class RLEEncoder {
 	/* global variables, WTF */
@@ -95,10 +92,5 @@ public class RLEEncoder {
 		}
 	}
 	
-	public static void main(String[] args) throws Exception {
-		FileOutputStream out = new FileOutputStream(new File("/tmp/srcjava.rle"));
-		byte[] encoded = new RLEEncoder().encode(2, Files.readAllBytes(new File("/tmp/pongimg.bin").toPath())); // read file into memory);
-		out.write(encoded);
-		out.close();
-	}
+	
 }

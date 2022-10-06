@@ -2,7 +2,6 @@ package com.durangoretro.rescomp;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -10,8 +9,7 @@ public class ImageGenerator {
 
 	
 	
-	public static byte[] convertToDurango(String s) throws Exception {
-		final File file = new File(s);
+	public static byte[] convertToDurango(File file) throws Exception {
 		final BufferedImage image = ImageIO.read(file);
 		byte pixels[] = new byte[8192];
 		int i=0;
@@ -25,16 +23,15 @@ public class ImageGenerator {
 	}
 	
 	public static String getHexString(byte[] pixels) {
-		StringBuilder sb = new StringBuilder(500);		
+		StringBuilder sb = new StringBuilder(1000);
+		sb.append("const unsigned char tiles[").append(pixels.length).append("] = {");
 		for(int i=0; i<pixels.length; i++) {
-			if(i%32==0) {
-				sb.append(".byt ");
-			}
-			sb.append(String.format("$%02X",pixels[i])).append(',');
+			sb.append("0x").append(String.format("$%02X",pixels[i])).append(',');
 			if(i%32==31) {
 				sb.append("\n");
 			}
-		}		
+		}
+		sb.append("};");
 		return sb.toString();
 	}
 
@@ -48,11 +45,5 @@ public class ImageGenerator {
 */
 	
 		
-	public static void main(final String args[]) throws Exception {
-		byte[] pixels = convertToDurango("/tmp/pong.png");
-		byte [] encoded = new RLEEncoder().encode(2, pixels);
-		System.out.println("----- IMAGE ------");
-		System.out.println(getHexString(encoded));
-		System.out.println("\n----- ----- ------");				
-	}
+	
 }
