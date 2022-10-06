@@ -15,7 +15,7 @@ public class Main {
 	
 	private static final String BACKGROUND = "BACKGROUND";
 	
-	public static void main(String[] args) throws Exception {
+	public static int main(String[] args) {
 		Options options = new Options();
 
 		Option inputOption = new Option("i", "input", true, "File input");
@@ -42,7 +42,7 @@ public class Main {
             formatter.printHelp("utility-name", options);
 
             System.exit(1);
-            return;
+            return -1;
         }
 
         String sourceFile = cmd.getOptionValue("input");
@@ -50,17 +50,27 @@ public class Main {
         String mode = cmd.getOptionValue("mode");
         
         if(mode.equalsIgnoreCase(BACKGROUND)) {
-        	compileBackground(sourceFile, outputFile);
+        	return compileBackground(sourceFile, outputFile);
+        }
+        else {
+        	System.out.println("Unknown mode");
+        	return -2;
         }
 	}
 
-	private static void compileBackground(String sourceFile, String outputFile) throws Exception {
-		final File file = new File(sourceFile);
-        byte[] pixels = ImageGenerator.convertToDurango(file);
-		byte [] encoded = new RLEEncoder().encode(2, pixels);
-        FileOutputStream out = new FileOutputStream(new File(outputFile));
-        out.write(ImageGenerator.getHexString(encoded).getBytes());		        
-		out.close();		
+	private static int compileBackground(String sourceFile, String outputFile) {
+		try {
+			final File file = new File(sourceFile);
+	        byte[] pixels = ImageGenerator.convertToDurango(file);
+			byte [] encoded = new RLEEncoder().encode(2, pixels);
+	        FileOutputStream out = new FileOutputStream(new File(outputFile));
+	        out.write(ImageGenerator.getHexString(encoded).getBytes());		        
+			out.close();
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -3;
+		}
 	}	
 	
 }
