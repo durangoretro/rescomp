@@ -12,61 +12,66 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 public class Main {
-	
+
 	private static final String BACKGROUND = "BACKGROUND";
-	
+
 	public static void main(String[] args) {
 		Options options = new Options();
 
+		Option resourceOption = new Option("n", "name", true, "Resource name");
+		resourceOption.setRequired(true);
+		options.addOption(resourceOption);
+
 		Option inputOption = new Option("i", "input", true, "File input");
-        inputOption.setRequired(true);
-        options.addOption(inputOption);
-        
+		inputOption.setRequired(true);
+		options.addOption(inputOption);
+
 		Option outputOption = new Option("o", "output", true, "File output");
-        outputOption.setRequired(true);
-        options.addOption(outputOption);
-        
-        Option modeOption = new Option("m", "mode", true, "Working mode, BACKGROUND");
-        modeOption.setRequired(true);
-        options.addOption(modeOption);
-                
+		outputOption.setRequired(true);
+		options.addOption(outputOption);
 
-        CommandLineParser parser = new DefaultParser();
-        HelpFormatter formatter = new HelpFormatter();
-        CommandLine cmd = null;
+		Option modeOption = new Option("m", "mode", true, "Working mode, BACKGROUND");
+		modeOption.setRequired(true);
+		options.addOption(modeOption);
 
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            formatter.printHelp("utility-name", options);
 
-            System.exit(1);
-        }
+		CommandLineParser parser = new DefaultParser();
+		HelpFormatter formatter = new HelpFormatter();
+		CommandLine cmd = null;
 
-        String sourceFile = cmd.getOptionValue("input");
-        String outputFile = cmd.getOptionValue("output");
-        String mode = cmd.getOptionValue("mode");
-        int status = 2;
-        if(mode.equalsIgnoreCase(BACKGROUND)) {
-        	status = compileBackground(sourceFile, outputFile);
-		
-        }
-        else {
-        	System.out.println("Unknown mode");
-        	status = 2;
-        }
-	System.exit(status);
-	
+		try {
+			cmd = parser.parse(options, args);
+		} catch (ParseException e) {
+			System.out.println(e.getMessage());
+			formatter.printHelp("utility-name", options);
+
+			System.exit(1);
+		}
+
+		String resourceName = cmd.getOptionValue("name");
+		String sourceFile = cmd.getOptionValue("input");
+		String outputFile = cmd.getOptionValue("output");
+		String mode = cmd.getOptionValue("mode");
+		int status = 2;
+		if(mode.equalsIgnoreCase(BACKGROUND)) {
+			status = compileBackground(resourceName, sourceFile, outputFile);
+
+		}
+		else {
+			System.out.println("Unknown mode");
+			status = 2;
+		}
+		System.exit(status);
+
 	}
 
-	private static int compileBackground(String sourceFile, String outputFile) {
+	private static int compileBackground(String resourceName, String sourceFile, String outputFile) {
 		try {
 			final File file = new File(sourceFile);
-	        byte[] pixels = ImageGenerator.convertToDurango(file);
+			byte[] pixels = ImageGenerator.convertToDurango(file);
 			byte [] encoded = new RLEEncoder().encode(2, pixels);
-	        FileOutputStream out = new FileOutputStream(new File(outputFile));
-	        out.write(ImageGenerator.getHexString(encoded).getBytes());		        
+			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			out.write(ImageGenerator.getHexString(resourceName, encoded).getBytes());		        
 			out.close();
 			return 0;
 		} catch (Exception e) {
@@ -74,5 +79,5 @@ public class Main {
 			return 3;
 		}
 	}	
-	
+
 }
