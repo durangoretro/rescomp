@@ -21,15 +21,15 @@ public class ImageGenerator {
 	}
 	
 	public static String getHexString(byte[] pixels) {
-		StringBuilder sb = new StringBuilder(1000);
-		sb.append("const unsigned char tiles[").append(pixels.length).append("] = {");
+		StringBuilder sb = new StringBuilder(5000);
+		sb.append("const unsigned char tiles[").append(pixels.length).append("] = {").append("\n");
 		for(int i=0; i<pixels.length; i++) {
-			sb.append("0x").append(String.format("$%02X",pixels[i])).append(',');
+			sb.append("0x").append(String.format("%02X",pixels[i])).append(',');
 			if(i%32==31) {
 				sb.append("\n");
 			}
 		}
-		sb.append("};");
+		sb.append("\n").append("};");
 		return sb.toString();
 	}
 

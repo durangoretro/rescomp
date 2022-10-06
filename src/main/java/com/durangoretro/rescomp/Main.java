@@ -15,7 +15,7 @@ public class Main {
 	
 	private static final String BACKGROUND = "BACKGROUND";
 	
-	public static int main(String[] args) {
+	public static void main(String[] args) {
 		Options options = new Options();
 
 		Option inputOption = new Option("i", "input", true, "File input");
@@ -33,7 +33,7 @@ public class Main {
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
-        CommandLine cmd;
+        CommandLine cmd = null;
 
         try {
             cmd = parser.parse(options, args);
@@ -42,20 +42,22 @@ public class Main {
             formatter.printHelp("utility-name", options);
 
             System.exit(1);
-            return -1;
         }
 
         String sourceFile = cmd.getOptionValue("input");
         String outputFile = cmd.getOptionValue("output");
         String mode = cmd.getOptionValue("mode");
-        
+        int status = 2;
         if(mode.equalsIgnoreCase(BACKGROUND)) {
-        	return compileBackground(sourceFile, outputFile);
+        	status = compileBackground(sourceFile, outputFile);
+		
         }
         else {
         	System.out.println("Unknown mode");
-        	return -2;
+        	status = 2;
         }
+	System.exit(status);
+	
 	}
 
 	private static int compileBackground(String sourceFile, String outputFile) {
@@ -69,7 +71,7 @@ public class Main {
 			return 0;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return -3;
+			return 3;
 		}
 	}	
 	

@@ -36,7 +36,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>net.emiliollbb.listacc.Main</mainClass>
+							<mainClass>com.durangoretro.rescomp.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
