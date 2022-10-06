@@ -41,7 +41,7 @@ public class Palette {
 		}
 	}
 	
-	public static byte getColorByte(int rgb) {
+	public static byte getColorByte(int rgb) throws Exception {
 		switch(rgb) {
 			case COLOR_00: return 0x00;
 			case COLOR_01: return 0x01;
@@ -59,7 +59,7 @@ public class Palette {
 			case COLOR_13: return 0x0d;
 			case COLOR_14: return 0x0e;
 			case COLOR_15: return 0x0f;
-			default : return (byte)0xff;
+			default : throw new Exception("Color not supported!");
 		}
 	}
 	
@@ -85,7 +85,7 @@ public class Palette {
 		}
 	}
 	
-	public static byte getColorByte(int rgbLeft, int rgbRight) {
+	public static byte getColorByte(int rgbLeft, int rgbRight) throws Exception {
 		return (byte) ((byte) (getColorByte(rgbLeft)<<4) | getColorByte(rgbRight));
 	}
 }

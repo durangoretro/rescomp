@@ -6,8 +6,6 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 public class ImageGenerator {
-
-	
 	
 	public static byte[] convertToDurango(File file) throws Exception {
 		final BufferedImage image = ImageIO.read(file);
