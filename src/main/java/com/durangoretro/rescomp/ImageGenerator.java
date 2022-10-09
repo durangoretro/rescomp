@@ -38,8 +38,8 @@ public class ImageGenerator {
 		StringBuilder sb = new StringBuilder(10000);
 		StringBuilder resourceNameSB = new StringBuilder(100);
 		final BufferedImage image = ImageIO.read(pngFile);
-		for(int row=0; row<image.getWidth()/spriteWidth; row++) {
-			for(int col=0; col<image.getHeight()/spriteHeight; col++) {
+		for(int row=0; row<image.getHeight()/spriteHeight; row++) {
+			for(int col=0; col<image.getWidth()/spriteWidth; col++) {
 				byte pixels[] = generateSpriteData(image, col, row, spriteWidth, spriteHeight);
 				resourceNameSB.setLength(0);
 				resourceNameSB.append(resourceName).append('_').append(row).append('_').append(col);
