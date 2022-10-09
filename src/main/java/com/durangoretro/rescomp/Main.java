@@ -14,6 +14,7 @@ import org.apache.commons.cli.ParseException;
 public class Main {
 
 	private static final String BACKGROUND = "BACKGROUND";
+	private static final String SPRITESHEET = "SPRITESHEET";
 
 	public static void main(String[] args) {
 		Options options = new Options();
@@ -33,6 +34,14 @@ public class Main {
 		Option modeOption = new Option("m", "mode", true, "Working mode, BACKGROUND");
 		modeOption.setRequired(true);
 		options.addOption(modeOption);
+		
+		Option widthOption = new Option("w", "width", true, "Sprite width");
+		widthOption.setRequired(false);
+		options.addOption(widthOption);
+		
+		Option heightOption = new Option("h", "height", true, "Sprite height");
+		heightOption.setRequired(false);
+		options.addOption(heightOption);
 
 
 		CommandLineParser parser = new DefaultParser();
@@ -55,7 +64,11 @@ public class Main {
 		int status = 2;
 		if(mode.equalsIgnoreCase(BACKGROUND)) {
 			status = compileBackground(resourceName, sourceFile, outputFile);
-
+		}
+		else if(mode.equalsIgnoreCase(SPRITESHEET)) {
+			int width = Integer.parseInt(cmd.getOptionValue("width"));
+			int height = Integer.parseInt(cmd.getOptionValue("height"));
+			status = compileSpriteSheet(resourceName, sourceFile, width, height, outputFile);
 		}
 		else {
 			System.out.println("Unknown mode");
@@ -78,6 +91,19 @@ public class Main {
 			e.printStackTrace();
 			return 3;
 		}
-	}	
+	}
+
+	private static int compileSpriteSheet(String resourceName, String sourceFile, int spriteWidth, int spriteHeight, String outputFile) {
+		try {
+			final File file = new File(sourceFile);
+			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			out.write(ImageGenerator.compileSpriteSheet(file, spriteWidth, spriteHeight, resourceName).getBytes());
+			out.close();
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 3;
+		}
+	}
 
 }

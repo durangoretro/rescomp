@@ -20,6 +20,35 @@ public class ImageGenerator {
 		return pixels;				
 	}
 	
+	public static byte[] generateSpriteData(BufferedImage spriteSheet, 
+			int spriteCol, int spriteRow, int spriteWidth, int spriteHeight) throws Exception {
+		byte pixels[] = new byte[spriteWidth*spriteHeight/2];
+		int i=0;
+		
+		for(int row=spriteRow*spriteHeight; row < spriteRow*spriteHeight+spriteHeight; row++) {
+			for(int col=spriteCol*spriteWidth; col<spriteCol*spriteWidth+spriteWidth; col+=2) {
+				pixels[i++]=Palette.getColorByte(spriteSheet.getRGB(col, row), spriteSheet.getRGB(col+1, row));				
+			}			
+		}
+		
+		return pixels;
+	}
+	
+	public static String compileSpriteSheet(File pngFile, int spriteWidth, int spriteHeight, String resourceName) throws Exception {
+		StringBuilder sb = new StringBuilder(10000);
+		StringBuilder resourceNameSB = new StringBuilder(100);
+		final BufferedImage image = ImageIO.read(pngFile);
+		for(int row=0; row<image.getWidth()/spriteWidth; row++) {
+			for(int col=0; col<image.getHeight()/spriteHeight; col++) {
+				byte pixels[] = generateSpriteData(image, col, row, spriteWidth, spriteHeight);
+				resourceNameSB.setLength(0);
+				resourceNameSB.append(resourceName).append('_').append(row).append('_').append(col);
+				sb.append(getHexString(resourceNameSB.toString(), pixels)).append("\n");
+			}
+		}
+		return sb.toString();
+	}
+	
 	public static String getHexString(String resurceName, byte[] pixels) {
 		StringBuilder sb = new StringBuilder(5000);
 		sb.append("const unsigned char ").append(resurceName).append('[').append(pixels.length).append("] = {").append("\n");
