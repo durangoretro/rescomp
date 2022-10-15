@@ -41,6 +41,28 @@ public class Palette {
 		}
 	}
 	
+	public static int getIntColorFromIndex(int index) {
+		switch(index) {
+			case 0:  return COLOR_00;
+			case 1:  return COLOR_01;
+			case 2:  return COLOR_02;
+			case 3:  return COLOR_03;
+			case 4:  return COLOR_04;
+			case 5:  return COLOR_05;
+			case 6:  return COLOR_06;
+			case 7:  return COLOR_07;
+			case 8:  return COLOR_08;
+			case 9:  return COLOR_09;
+			case 10: return COLOR_10;
+			case 11: return COLOR_11;
+			case 12: return COLOR_12;
+			case 13: return COLOR_13;
+			case 14: return COLOR_14;
+			case 15: return COLOR_15;
+			default : return 0;
+		}
+	}
+	
 	public static byte getColorByte(int rgb) throws Exception {
 		switch(rgb) {
 			case COLOR_00: return 0x00;
@@ -87,5 +109,13 @@ public class Palette {
 	
 	public static byte getColorByte(int rgbLeft, int rgbRight) throws Exception {
 		return (byte) ((byte) (getColorByte(rgbLeft)<<4) | getColorByte(rgbRight));
+	}
+	
+	public static int getIntColorRightFromByte(byte value) {
+		return getIntColorFromIndex(value & 0x0f);
+	}
+	
+	public static int getIntColorLeftFromByte(byte value) {
+		return getIntColorFromIndex((value & 0xf0)>>4);
 	}
 }
