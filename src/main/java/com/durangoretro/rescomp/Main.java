@@ -2,6 +2,7 @@ package com.durangoretro.rescomp;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -15,6 +16,7 @@ public class Main {
 
 	private static final String BACKGROUND = "BACKGROUND";
 	private static final String SPRITESHEET = "SPRITESHEET";
+	private static final String SCREENSHOOT = "SCREENSHOOT";
 
 	public static void main(String[] args) {
 		Options options = new Options();
@@ -70,12 +72,28 @@ public class Main {
 			int height = Integer.parseInt(cmd.getOptionValue("height"));
 			status = compileSpriteSheet(resourceName, sourceFile, width, height, outputFile);
 		}
+		else if(mode.equalsIgnoreCase(SCREENSHOOT)) {
+			status = extractScreenshoot(sourceFile, outputFile);
+		}
 		else {
 			System.out.println("Unknown mode");
 			status = 2;
 		}
 		System.exit(status);
 
+	}
+
+	private static int extractScreenshoot(String sourceFile, String outputFile) {
+		try {
+			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
+			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			ScreenshootExtractor.generatePng(mem, out);
+			out.close();
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 3;
+		}
 	}
 
 	private static int compileBackground(String resourceName, String sourceFile, String outputFile) {
