@@ -17,6 +17,7 @@ public class Main {
 	private static final String BACKGROUND = "BACKGROUND";
 	private static final String SPRITESHEET = "SPRITESHEET";
 	private static final String SCREENSHOOT = "SCREENSHOOT";
+	private static final String BINARY = "BINARY";
 
 	public static void main(String[] args) {
 		Options options = new Options();
@@ -75,12 +76,28 @@ public class Main {
 		else if(mode.equalsIgnoreCase(SCREENSHOOT)) {
 			status = extractScreenshoot(sourceFile, outputFile);
 		}
+		else if(mode.equalsIgnoreCase(BINARY)) {
+			status = compileBinary(resourceName, sourceFile, outputFile);
+		}
 		else {
 			System.out.println("Unknown mode");
 			status = 2;
 		}
 		System.exit(status);
 
+	}
+
+	private static int compileBinary(String resourceName, String sourceFile, String outputFile) {
+		try {
+			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
+			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			out.write(ImageGenerator.getHexString(outputFile, mem).getBytes());
+			out.close();
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 3;
+		}
 	}
 
 	private static int extractScreenshoot(String sourceFile, String outputFile) {
@@ -102,7 +119,7 @@ public class Main {
 			byte[] pixels = ImageGenerator.convertToDurango(file);
 			byte [] encoded = new RLEEncoder().encode(2, pixels);
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
-			out.write(ImageGenerator.getHexString(resourceName, encoded).getBytes());		        
+			out.write(ImageGenerator.getHexString(resourceName, encoded).getBytes());	        
 			out.close();
 			return 0;
 		} catch (Exception e) {
