@@ -18,6 +18,7 @@ public class Main {
 	private static final String SPRITESHEET = "SPRITESHEET";
 	private static final String SCREENSHOOT = "SCREENSHOOT";
 	private static final String BINARY = "BINARY";
+	private static final String FONT = "FONT";
 
 	public static void main(String[] args) {
 		Options options = new Options();
@@ -79,6 +80,11 @@ public class Main {
 		else if(mode.equalsIgnoreCase(BINARY)) {
 			status = compileBinary(resourceName, sourceFile, outputFile);
 		}
+		else if(mode.equalsIgnoreCase(FONT)) {
+			int width = Integer.parseInt(cmd.getOptionValue("width"));
+			int height = Integer.parseInt(cmd.getOptionValue("height"));
+			status = compileFont(resourceName, sourceFile, width, height, outputFile);
+		}
 		else {
 			System.out.println("Unknown mode");
 			status = 2;
@@ -133,6 +139,19 @@ public class Main {
 			final File file = new File(sourceFile);
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
 			out.write(ImageGenerator.compileSpriteSheet(file, spriteWidth, spriteHeight, resourceName).getBytes());
+			out.close();
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 3;
+		}
+	}
+	
+	private static int compileFont(String resourceName, String sourceFile, int fontWidth, int fontHeight, String outputFile) {
+		try {
+			final File file = new File(sourceFile);
+			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			out.write(ImageGenerator.compileFont(file, fontWidth, fontHeight, resourceName).getBytes());
 			out.close();
 			return 0;
 		} catch (Exception e) {
