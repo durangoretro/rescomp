@@ -54,14 +54,14 @@ public class ImageGenerator {
 		byte data[] = new byte[arraySize/8];
 		for(int j=0; j<data.length; j++) {
 			byte d7, d6, d5, d4, d3, d2, d1, d0;
-			d7 = pixels[j*8+0] ? (byte)0b00000001 : 0x00;
-			d6 = pixels[j*8+1] ? (byte)0b00000010 : 0x00;
-			d5 = pixels[j*8+2] ? (byte)0b00000100 : 0x00;
-			d4 = pixels[j*8+3] ? (byte)0b00001000 : 0x00;
-			d3 = pixels[j*8+4] ? (byte)0b00010000 : 0x00;
-			d2 = pixels[j*8+5] ? (byte)0b00100000 : 0x00;
-			d1 = pixels[j*8+6] ? (byte)0b01000000 : 0x00;
-			d0 = pixels[j*8+7] ? (byte)0b10000000 : 0x00;
+			d7 = pixels[j*8+0] ? (byte)0b10000000 : 0x00;
+			d6 = pixels[j*8+1] ? (byte)0b01000000 : 0x00;
+			d5 = pixels[j*8+2] ? (byte)0b00100000 : 0x00;
+			d4 = pixels[j*8+3] ? (byte)0b00010000 : 0x00;
+			d3 = pixels[j*8+4] ? (byte)0b00001000 : 0x00;
+			d2 = pixels[j*8+5] ? (byte)0b00000100 : 0x00;
+			d1 = pixels[j*8+6] ? (byte)0b00000010 : 0x00;
+			d0 = pixels[j*8+7] ? (byte)0b00000001 : 0x00;
 			
 			data[j]=(byte)(d7|d6|d5|d4|d3|d2|d1|d0);
 		}
