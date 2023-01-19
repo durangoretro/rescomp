@@ -46,7 +46,7 @@ public class ImageGenerator {
 		int i=0;
 		
 		for(int row=letterRow*letterHeight; row < letterRow*letterHeight+letterHeight; row++) {
-			for(int col=letterCol*letterWidth; col<letterCol*letterWidth+letterWidth; col+=2) {
+			for(int col=letterCol*letterWidth; col<letterCol*letterWidth+letterWidth; col++) {
 				pixels[i++]=spriteSheet.getRGB(col, row)==Palette.COLOR_15;				
 			}			
 		}
