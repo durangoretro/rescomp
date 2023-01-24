@@ -18,6 +18,7 @@ public class Signer {
 					}
 				}
 			}
+			System.out.println("NOT FOUND!");
 			throw new Exception("Checksum NOT found!");
 			
 		}
