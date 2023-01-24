@@ -27,7 +27,8 @@ public class Signer {
 			int suma1=0;
 			int suma2=0;
 			for(int i=0; i<rom.length; i++) {
-				if(rom.length==16*1024 && i>=8064 && i<=8191) {
+				if(rom.length==16*1024 && i>=0xdf80-0xc000 && i<=0xdfff-0xc000) {
+					System.out.println("IO");
 					continue;
 				}
 				suma1=(suma1+rom[i])%256;
