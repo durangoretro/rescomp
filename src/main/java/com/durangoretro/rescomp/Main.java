@@ -19,6 +19,8 @@ public class Main {
 	private static final String SCREENSHOOT = "SCREENSHOOT";
 	private static final String BINARY = "BINARY";
 	private static final String FONT = "FONT";
+	private static final String SIGNER = "SIGNER";
+	
 
 	public static void main(String[] args) {
 		Options options = new Options();
@@ -84,6 +86,9 @@ public class Main {
 			int width = Integer.parseInt(cmd.getOptionValue("width"));
 			int height = Integer.parseInt(cmd.getOptionValue("height"));
 			status = compileFont(resourceName, sourceFile, width, height, outputFile);
+		}
+		else if(mode.equalsIgnoreCase(SIGNER)) {
+			status = signBinary(resourceName, sourceFile, outputFile);
 		}
 		else {
 			System.out.println("Unknown mode");
@@ -152,6 +157,20 @@ public class Main {
 			final File file = new File(sourceFile);
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
 			out.write(ImageGenerator.compileFont(file, fontWidth, fontHeight, resourceName).getBytes());
+			out.close();
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 3;
+		}
+	}
+	
+	private static int signBinary(String resourceName, String sourceFile, String outputFile) {
+		try {
+			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
+			Signer.signStamp(resourceName, mem);
+			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			out.write(mem);
 			out.close();
 			return 0;
 		} catch (Exception e) {
