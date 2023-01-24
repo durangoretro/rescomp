@@ -4,7 +4,6 @@ import java.nio.charset.Charset;
 
 public class Signer {
 		private static final String SIGNATURE_STAMP = "SIGNATURE:[";
-		// git log -1 --abbrev-commit | head -1 | sed 's/commit //'
 		private static void addSignature(int offset, byte[] rom) throws Exception {
 			int sum, check;				/* computed sums    */
 			int size;					/* ROM size         */
@@ -14,6 +13,7 @@ public class Signer {
 					
 			size=rom.length;				/* compute size    */
 			if (size>32768) {
+				System.out.print("\n*** File too large ***\n\n");
 				throw new Exception("File too large!");				/* too large       */
 			}
 			System.out.print("ROM size: "+size+" bytes\n");
@@ -23,15 +23,25 @@ public class Signer {
 			}
 			
 			skip = 256;				/* impossible value */
+			System.out.print("DOWNLOADABLE ROM, no page skipped\n");
 			skip = size-((256-skip)<<8);	/* convert page into offset */
 			target -= rom[offset];		/* subtract reserved values */
 			target -= rom[offset+1];
 			target &= 255;
 			target = 256-target;		/* expected sum    */
+			System.out.print("Original signature: "+String.format("%02X",rom[offset])+String.format("%02X",rom[offset+1]));
 			rom[offset]		=0;
 			rom[offset+1]	=0;			/* clear them too  */
 
 			check=sum=0;				/* precheck values */
+		/*	for(i=0;i<size;i++) {
+				sum += rom[i];
+				sum &= 255;
+				check += sum;
+				check &= 255;
+			}
+			System.out.print("ORIGINAL: %d, %d ($%02x%02x)\n", sum, check, check, sum);*/
+			System.out.print("TARGET: "+target+"\n");
 
 			check = 256;
 			j=0;
@@ -46,9 +56,11 @@ public class Signer {
 					check += sum;
 					check &= 255;
 				}
+//				if(check==0)	System.out.print("%d.%d: SUM=%d, CHECK=%d\n", j, rom[offset+1], sum, check);
 				j++;
 			}
 			if (check>0) {
+				System.out.print("\n*** No way! Try another offset ***\n\n");
 				throw new Exception("\n*** No way! Try another offset ***\n\n");
 			}
 			System.out.print(j+" attempts\n");
