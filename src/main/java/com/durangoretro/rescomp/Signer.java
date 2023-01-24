@@ -5,6 +5,10 @@ import java.nio.charset.Charset;
 public class Signer {
 		private static final String SIGNATURE_STAMP = "SIGNATURE:[";
 		private static void addSignature(int offset, byte[] rom) throws Exception {
+			if(validateChecksum(rom)) {
+				System.out.println("Already signed!!!");
+				return;
+			}
 			for(int i=0; i<=256; i++) {
 				for(int j=0; j<=256; j++) {
 					rom[offset]=(byte)j;
