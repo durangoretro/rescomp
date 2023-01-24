@@ -7,8 +7,8 @@ public class Signer {
 		private static void addSignature(int offset, byte[] rom) throws Exception {
 			for(int i=0; i<=256; i++) {
 				for(int j=0; j<=256; j++) {
-					rom[offset]=(byte)i;
-					rom[offset+1]=(byte)j;
+					rom[offset]=(byte)j;
+					rom[offset+1]=(byte)i;
 					if(validateChecksum(rom)) {
 						return;
 					}
