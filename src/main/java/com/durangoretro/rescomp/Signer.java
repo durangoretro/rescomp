@@ -20,10 +20,11 @@ public class Signer {
 		}
 		
 		private static boolean validateChecksum(byte[] rom) {
+			int start = 32*1024-rom.length;
 			int suma1=0;
 			int suma2=0;
 			for(int i=0; i<rom.length; i++) {
-				if(rom.length==16*1024 && i>=(0xdf80-0xc000) && i<=(0xdfff-0xc000)) {
+				if(start+i>=0xdf00 && start+i<=0xdfff) {
 					continue;
 				}
 				suma1=(suma1+rom[i])%256;
