@@ -24,9 +24,10 @@ public class Signer {
 			int suma1=0;
 			int suma2=0;
 			for(int i=0; i<rom.length; i++) {
-				if(start+i>=0xdf00 && start+i<=0xdfff) {
+				if(start+i>=0xdf80 && start+i<=0xdfff) {
 					continue;
 				}
+				//System.out.print("["+String.format("%02X", rom[i])+"]");
 				suma1=(suma1+rom[i])%256;
 				suma2=(suma2+suma1)%256;
 			}
