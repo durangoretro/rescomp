@@ -25,7 +25,6 @@ public class Signer {
 			int suma2=0;
 			for(int i=0; i<rom.length; i++) {
 				if(start+i>=0xdf00 && start+i<=0xdfff) {
-					i++;
 					continue;
 				}
 				suma1=(suma1+rom[i])%256;
