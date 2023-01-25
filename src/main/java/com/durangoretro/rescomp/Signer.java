@@ -4,47 +4,39 @@ import java.nio.charset.Charset;
 
 public class Signer {
 		private static final String SIGNATURE_STAMP = "SIGNATURE:[";
-		private static void addSignature(int offset, byte[] rom) throws Exception {
-			for(int i=0; i<=256; i++) {
-				for(int j=0; j<=256; j++) {
-					rom[offset]=(byte)j;
-					rom[offset+1]=(byte)i;
-					if(validateChecksum(rom)) {
-						return;
-					}
-				}
-			}
-			System.out.println("NOT FOUND!");
-			throw new Exception("Checksum NOT found!");
-			
-		}
 		
-		private static boolean validateChecksum(byte[] rom) {
+		
+		private static byte[] calculateChecksum(byte[] rom) {
+			byte[] signature = new byte[2];
 			int start = 64*1024-rom.length;
-			int suma1=0;
-			int suma2=0;
 			for(int i=0; i<rom.length; i++) {
-				if(start+i>=0xdf80 && start+i<=0xdfff) {
+				if(start+i>=0xdf00 && start+i<=0xdfff) {
 					continue;
 				}
 				//System.out.print("["+String.format("%02X", rom[i])+"]");
-				suma1=(suma1+rom[i])%256;
-				suma2=(suma2+suma1)%256;
+				signature[0]=(byte)((signature[0]+rom[i])%256);
+				signature[1]=(byte)((signature[1]+signature[0])%256);
 			}
-			return suma1==0 && suma2==0;
+			return signature;
 		}
 
 		private static int findSignatureOffset(byte[] rom) {
 			return new String(rom, Charset.forName("ASCII")).indexOf(SIGNATURE_STAMP) + SIGNATURE_STAMP.length();
 		}
 		
-		public static void signStamp(String stamp, byte[] rom) throws Exception {
-			if(validateChecksum(rom)) {
+		public static void sign(byte[] rom) throws Exception {
+			int offset = findSignatureOffset(rom);
+			int start = 64*1024-rom.length;
+			System.out.println("Validating signature at " + String.format("%02X", start+offset));
+			
+			byte[] signature = calculateChecksum(rom);
+			if(signature[0] == rom[offset] && signature[1] == rom[offset+1]){
 				System.out.println("Already signed!!!");
 				return;
 			}
-			int offset = findSignatureOffset(rom);
-			System.out.println("Calculaing signature at " + offset);
-			addSignature(offset, rom);
+			else {
+				rom[offset] = signature[0];
+				rom[offset+1] = signature[1];
+			}
 		}
 	}

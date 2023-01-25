@@ -168,7 +168,7 @@ public class Main {
 	private static int signBinary(String resourceName, String sourceFile, String outputFile) {
 		try {
 			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
-			Signer.signStamp(resourceName, mem);
+			Signer.sign(mem);
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
 			out.write(mem);
 			out.close();
