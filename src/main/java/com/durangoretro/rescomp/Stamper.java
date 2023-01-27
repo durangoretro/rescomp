@@ -23,9 +23,9 @@ public class Stamper {
 		public static void stamp(byte[] rom, String stamp) throws Exception {
 			int offset = findSignatureOffset(rom);
 			int start = 64*1024-rom.length;
-			System.out.println("Adding build version at " + String.format("%02X", start+offset));
+			System.out.println("Adding build version " + stamp +" at " + String.format("%02X", start+offset));
 			
-			if(stamp.length()!=16) {
+			if(stamp.length()!=8) {
 				throw new Exception("Invalid stamp length. It should be 16 char");
 			}
 			byte[] data = hexStringToByteArray(stamp);
