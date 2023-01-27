@@ -25,10 +25,10 @@ public class Stamper {
 			int start = 64*1024-rom.length;
 			System.out.println("Adding build version at " + String.format("%02X", start+offset));
 			
-			if(stamp.length()!=7) {
-				throw new Exception("Invalid stamp length. It should be 7 char");
+			if(stamp.length()!=16) {
+				throw new Exception("Invalid stamp length. It should be 16 char");
 			}
-			byte[] data = hexStringToByteArray("0"+stamp);
+			byte[] data = hexStringToByteArray(stamp);
 			
 			for(int i=0; i<data.length; i++) {
 				rom[offset+i] = data[i];
