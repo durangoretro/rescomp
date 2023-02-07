@@ -188,7 +188,7 @@ public class Main {
 		try {
 			File file = new File(romFile);
 			byte[] mem = Files.readAllBytes(file.toPath());
-			Stamper.stampHexValue(mem, stampName, stampValue);
+			Stamper.stampHexValue(mem, stampName+":[", stampValue);
 			FileOutputStream out = new FileOutputStream(file);
 			out.write(mem);
 			out.close();
