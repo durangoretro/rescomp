@@ -20,6 +20,7 @@ public class Main {
 	private static final String BINARY = "BINARY";
 	private static final String FONT = "FONT";
 	private static final String SIGNER = "SIGNER";
+	private static final String STAMP = "STAMP";
 	
 
 	public static void main(String[] args) {
@@ -89,6 +90,9 @@ public class Main {
 		}
 		else if(mode.equalsIgnoreCase(SIGNER)) {
 			status = signBinary(resourceName, sourceFile, outputFile);
+		}
+		else if(mode.equalsIgnoreCase(STAMP)) {
+			status = stampHex(sourceFile, resourceName, outputFile);
 		}
 		else {
 			System.out.println("Unknown mode");
@@ -168,9 +172,24 @@ public class Main {
 	private static int signBinary(String resourceName, String sourceFile, String outputFile) {
 		try {
 			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
-			Stamper.stamp(mem, resourceName);
+			Stamper.stampHexValue(mem, Stamper.BUILD_STAMP, resourceName);
 			Signer.sign(mem);
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			out.write(mem);
+			out.close();
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 3;
+		}
+	}
+	
+	private static int stampHex(String romFile, String stampName, String stampValue) {
+		try {
+			File file = new File(romFile);
+			byte[] mem = Files.readAllBytes(file.toPath());
+			Stamper.stampHexValue(mem, stampName, stampValue);
+			FileOutputStream out = new FileOutputStream(file);
 			out.write(mem);
 			out.close();
 			return 0;

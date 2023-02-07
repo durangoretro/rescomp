@@ -3,7 +3,7 @@ package com.durangoretro.rescomp;
 import java.nio.charset.Charset;
 
 public class Stamper {
-		private static final String BUILD_STAMP = "BUILD:[";
+		public static final String BUILD_STAMP = "BUILD:[";
 
 		private static int findSignatureOffset(byte[] rom) {
 			return new String(rom, Charset.forName("ASCII")).indexOf(BUILD_STAMP) + BUILD_STAMP.length();
@@ -20,10 +20,10 @@ public class Stamper {
 		    return data;
 		}
 		
-		public static void stamp(byte[] rom, String stamp) throws Exception {
+		public static void stampHexValue(byte[] rom, String stamp, String value) throws Exception {
 			int offset = findSignatureOffset(rom);
 			int start = 64*1024-rom.length;
-			System.out.println("Adding build version " + stamp +" at " + String.format("%02X", start+offset));
+			System.out.println("Adding Stamp: "+stamp+". value: " + stamp +" at " + String.format("%02X", start+offset));
 			
 			if(stamp.length()!=8) {
 				throw new Exception("Invalid stamp length. It should be 16 char");
