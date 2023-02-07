@@ -34,4 +34,16 @@ public class Stamper {
 				rom[offset+i] = data[i];
 			}
 		}
+		
+		public static void stampStrValue(byte[] rom, String stamp, String value) throws Exception {
+			int offset = findSignatureOffset(rom, stamp);
+			int start = 64*1024-rom.length;
+			System.out.println("Adding STR Stamp: "+stamp+". value: " + value +" at " + String.format("%02X", start+offset));
+			
+			byte[] data = value.getBytes(Charset.forName("ASCII"));
+			
+			for(int i=0; i<data.length; i++) {
+				rom[offset+i] = data[i];
+			}
+		}
 	}

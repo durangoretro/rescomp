@@ -92,7 +92,7 @@ public class Main {
 			status = signBinary(resourceName, sourceFile, outputFile);
 		}
 		else if(mode.equalsIgnoreCase(STAMP)) {
-			status = stampHex(sourceFile, resourceName, outputFile);
+			status = stampStr(sourceFile, resourceName, outputFile);
 		}
 		else {
 			System.out.println("Unknown mode");
@@ -184,11 +184,11 @@ public class Main {
 		}
 	}
 	
-	private static int stampHex(String romFile, String stampName, String stampValue) {
+	private static int stampStr(String romFile, String stampName, String stampValue) {
 		try {
 			File file = new File(romFile);
 			byte[] mem = Files.readAllBytes(file.toPath());
-			Stamper.stampHexValue(mem, stampName+":[", stampValue);
+			Stamper.stampStrValue(mem, stampName+":[", stampValue);
 			FileOutputStream out = new FileOutputStream(file);
 			out.write(mem);
 			out.close();
