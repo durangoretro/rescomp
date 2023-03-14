@@ -10,7 +10,12 @@ public class Signer {
 			byte[] signature = new byte[2];
 			int start = 64*1024-rom.length;
 			for(int i=0; i<rom.length; i++) {
+				// Skip IO page
 				if(start+i>=0xdf00 && start+i<=0xdfff) {
+					continue;
+				}
+				// Skip last page
+				if(start+i>=0xff00 && start+i<=0xffff) {
 					continue;
 				}
 				//System.out.print("["+String.format("%02X", rom[i])+"]");
