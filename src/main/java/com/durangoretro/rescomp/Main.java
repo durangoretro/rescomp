@@ -20,6 +20,7 @@ public class Main {
 	private static final String BINARY = "BINARY";
 	private static final String FONT = "FONT";
 	private static final String SIGNER = "SIGNER";
+	private static final String VERIFY = "VERIFY";
 	private static final String STAMP = "STAMP";
 	
 
@@ -90,6 +91,9 @@ public class Main {
 		}
 		else if(mode.equalsIgnoreCase(SIGNER)) {
 			status = signBinary(resourceName, sourceFile, outputFile);
+		}
+		else if(mode.equalsIgnoreCase(VERIFY)) {
+			status = verifySign(resourceName, sourceFile, outputFile);
 		}
 		else if(mode.equalsIgnoreCase(STAMP)) {
 			status = stampStr(sourceFile, resourceName, outputFile);
@@ -177,6 +181,18 @@ public class Main {
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
 			out.write(mem);
 			out.close();
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 3;
+		}
+	}
+	
+	private static int verifySign(String resourceName, String sourceFile, String outputFile) {
+		try {
+			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
+			Signer.sign(mem);
+			
 			return 0;
 		} catch (Exception e) {
 			e.printStackTrace();

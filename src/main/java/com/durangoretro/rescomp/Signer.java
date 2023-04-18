@@ -42,6 +42,7 @@ public class Signer {
 			else {
 				rom[offset] = signature[0];
 				rom[offset+1] = signature[1];
+				System.out.println("Right signature: " + String.format("%02X%02X", signature[0],signature[1]));
 			}
 		}
 	}
