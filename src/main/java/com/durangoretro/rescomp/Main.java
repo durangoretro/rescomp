@@ -196,6 +196,7 @@ public class Main {
 			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
 			Stamper.stampHexValue(mem, Stamper.BUILD_STAMP, resourceName);
 			DXHead.stampTitleDescription(mem, title, description);
+			DXHead.copyBuildHashs(mem);
 			Signer.sign(mem);
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
 			out.write(mem);

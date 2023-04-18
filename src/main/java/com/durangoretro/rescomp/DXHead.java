@@ -24,4 +24,13 @@ public class DXHead {
 		i++;
 		rom[offset+i] = 0;
 	}
+	
+	public static void copyBuildHashs(byte[] rom) {
+		for(int i=0; i<8; i++) {
+			rom[0x00E2+i]=rom[0x3FB7+i];
+		}
+		for(int i=0; i<8; i++) {
+			rom[0x00EA+i]=rom[0x3FC7+i];
+		}
+	}
 }
