@@ -3,7 +3,8 @@ package com.durangoretro.rescomp;
 import java.nio.charset.Charset;
 
 public class DXHead {
-	public static final int COMMENTS_OFFSET = 8;
+	public static final int COMMENTS_OFFSET = 0x0008;
+	public static final int HASHS_OFFSET = 0x00E6;
 
 	public static void stampTitleDescription(byte[] rom, String title, String description) throws Exception {
 		int offset = COMMENTS_OFFSET;
@@ -26,11 +27,12 @@ public class DXHead {
 	}
 	
 	public static void copyBuildHashs(byte[] rom) {
+		
 		for(int i=0; i<8; i++) {
-			rom[0x00E2+i]=rom[0x3FB7+i];
+			rom[HASHS_OFFSET+i]=rom[0x3FB7+i];
 		}
 		for(int i=0; i<8; i++) {
-			rom[0x00EA+i]=rom[0x3FC7+i];
+			rom[HASHS_OFFSET+8+i]=rom[0x3FC7+i];
 		}
 	}
 }
