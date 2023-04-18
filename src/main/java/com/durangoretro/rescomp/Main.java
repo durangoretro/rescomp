@@ -194,7 +194,7 @@ public class Main {
 	private static int signBinary(String resourceName, String sourceFile, String outputFile, String title, String description) {
 		try {
 			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
-			Stamper.stampHexValue(mem, Stamper.BUILD_STAMP, resourceName);
+			Stamper.stampStrValue(mem, Stamper.BUILD_STAMP, resourceName);
 			DXHead.stampTitleDescription(mem, title, description);
 			DXHead.copyBuildHashs(mem);
 			Signer.sign(mem);
