@@ -16,12 +16,12 @@ public class DXHead {
 		for(int j=0; j<titleData.length; j++, i++) {
 			rom[offset+i] = titleData[j];
 		}
-		i++;
 		rom[offset+i] = 0;
+        i++;		
 		for(int j=0; j<descriptionData.length; j++, i++) {
 			rom[offset+i] = descriptionData[j];
-		}
-		i++;
+		}		
 		rom[offset+i] = 0;
+        i++;
 	}
 }
