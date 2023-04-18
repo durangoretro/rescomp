@@ -50,6 +50,14 @@ public class Main {
 		Option heightOption = new Option("h", "height", true, "Sprite height");
 		heightOption.setRequired(false);
 		options.addOption(heightOption);
+		
+		Option titleOption = new Option("t", "title", true, "Game title");
+		titleOption.setRequired(false);
+		options.addOption(titleOption);
+		
+		Option descriptionOption = new Option("d", "description", true, "Game description");
+		descriptionOption.setRequired(false);
+		options.addOption(descriptionOption);
 
 
 		CommandLineParser parser = new DefaultParser();
@@ -90,7 +98,17 @@ public class Main {
 			status = compileFont(resourceName, sourceFile, width, height, outputFile);
 		}
 		else if(mode.equalsIgnoreCase(SIGNER)) {
-			status = signBinary(resourceName, sourceFile, outputFile);
+			String title = cmd.getOptionValue("title");
+			String description = cmd.getOptionValue("description");
+			if(title==null || title.isBlank()) {
+				System.out.println("title is mandatory");
+				System.exit(1);
+			}
+			if(description==null || description.isBlank()) {
+				System.out.println("description is mandatory");
+				System.exit(1);
+			}
+			status = signBinary(resourceName, sourceFile, outputFile, title, description);
 		}
 		else if(mode.equalsIgnoreCase(VERIFY)) {
 			status = verifySign(resourceName, sourceFile, outputFile);
@@ -173,10 +191,11 @@ public class Main {
 		}
 	}
 	
-	private static int signBinary(String resourceName, String sourceFile, String outputFile) {
+	private static int signBinary(String resourceName, String sourceFile, String outputFile, String title, String description) {
 		try {
 			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
 			Stamper.stampHexValue(mem, Stamper.BUILD_STAMP, resourceName);
+			DXHead.stampTitleDescription(mem, title, description);
 			Signer.sign(mem);
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
 			out.write(mem);
