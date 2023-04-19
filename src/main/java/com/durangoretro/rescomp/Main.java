@@ -198,6 +198,7 @@ public class Main {
 			DXHead.stampTitleDescription(mem, title, description);
 			DXHead.copyBuildHashs(mem);
 			DXHead.setVersion(mem, "");
+			DXHead.setTimestamp(mem);
 			Signer.sign(mem);
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
 			out.write(mem);
