@@ -4,8 +4,9 @@ import java.nio.charset.Charset;
 
 public class Stamper {
 		public static final String BUILD_STAMP = "BUILD:[";
+		public static final String DCLIB_STAMP = "DCLIB:[";
 
-		private static int findSignatureOffset(byte[] rom, String stamp) {
+		public static int findSignatureOffset(byte[] rom, String stamp) {
 			return new String(rom, Charset.forName("ASCII")).indexOf(stamp) + BUILD_STAMP.length();
 		}
 		
