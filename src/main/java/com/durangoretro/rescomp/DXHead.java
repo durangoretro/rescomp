@@ -32,12 +32,10 @@ public class DXHead {
 	public static void copyBuildHashs(byte[] rom) {
 		
 		for(int i=0; i<8; i++) {
-			//rom[HASHS_OFFSET+i]=rom[0x3FB7+i];
 			rom[HASHS_OFFSET+i]=rom[Stamper.findSignatureOffset(rom, Stamper.DCLIB_STAMP)+i];
 		}
 		for(int i=0; i<8; i++) {
-			//rom[HASHS_OFFSET+8+i]=rom[0x3FC7+i];
-			rom[HASHS_OFFSET+8+i]=rom[Stamper.findSignatureOffset(rom, Stamper.BUILD_STAMP)];
+			rom[HASHS_OFFSET+8+i]=rom[Stamper.findSignatureOffset(rom, Stamper.BUILD_STAMP)+i];
 		}
 	}
 	
