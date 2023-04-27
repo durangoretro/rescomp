@@ -1,5 +1,8 @@
 package com.durangoretro.rescomp;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Palette {
 
 	public static final int COLOR_00 = -16777216;	// Negro
@@ -19,26 +22,48 @@ public class Palette {
 	public static final int COLOR_14 = -43521;		// Fucsia
 	public static final int COLOR_15 = -1;			// Blanco
 
+	private static final Map<Integer, Integer> COLOR_INDEX= new HashMap<>();
+			static {
+				COLOR_INDEX.put(COLOR_00, 0);
+				COLOR_INDEX.put(COLOR_01, 1);
+				COLOR_INDEX.put(COLOR_02, 2);
+				COLOR_INDEX.put(COLOR_03, 3);
+				COLOR_INDEX.put(COLOR_04, 4);
+				COLOR_INDEX.put(COLOR_05, 5);
+				COLOR_INDEX.put(COLOR_06, 6);
+				COLOR_INDEX.put(COLOR_07, 7);
+				COLOR_INDEX.put(COLOR_08, 8);
+				COLOR_INDEX.put(COLOR_09, 9);
+				COLOR_INDEX.put(COLOR_10, 10);
+				COLOR_INDEX.put(COLOR_11, 11);
+				COLOR_INDEX.put(COLOR_12, 12);
+				COLOR_INDEX.put(COLOR_13, 13);
+				COLOR_INDEX.put(COLOR_14, 14);
+				COLOR_INDEX.put(COLOR_15, 15);
+			}
+	private static final Map<Integer, Byte> COLOR_BYTE= new HashMap<>();
+
+			static {
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_01,(byte)0x01);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+				COLOR_BYTE.put(COLOR_00,(byte)0x00);
+			}
+
 	public static int getColorIndex(int rgb) {
-		switch(rgb) {
-			case COLOR_00: return 0;
-			case COLOR_01: return 1;
-			case COLOR_02: return 2;
-			case COLOR_03: return 3;
-			case COLOR_04: return 4;
-			case COLOR_05: return 5;
-			case COLOR_06: return 6;
-			case COLOR_07: return 7;
-			case COLOR_08: return 8;
-			case COLOR_09: return 9;
-			case COLOR_10: return 10;
-			case COLOR_11: return 11;
-			case COLOR_12: return 12;
-			case COLOR_13: return 13;
-			case COLOR_14: return 14;
-			case COLOR_15: return 15;
-			default : return -1;
-		}
+		return COLOR_INDEX.getOrDefault(rgb, -1);
 	}
 	
 	public static int getIntColorFromIndex(int index) {
