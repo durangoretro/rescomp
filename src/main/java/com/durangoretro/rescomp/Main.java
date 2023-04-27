@@ -11,6 +11,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang.StringUtils;
 
 public class Main {
 
@@ -100,11 +101,11 @@ public class Main {
 		else if(mode.equalsIgnoreCase(SIGNER)) {
 			String title = cmd.getOptionValue("title");
 			String description = cmd.getOptionValue("description");
-			if(title==null || title.isBlank()) {
+			if(StringUtils.isBlank(title)) {
 				System.out.println("title is mandatory");
 				System.exit(1);
 			}
-			if(description==null || description.isBlank()) {
+			if(StringUtils.isBlank(description)) {
 				System.out.println("description is mandatory");
 				System.exit(1);
 			}
