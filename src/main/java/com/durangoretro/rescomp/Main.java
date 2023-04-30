@@ -77,52 +77,63 @@ public class Main {
 		String resourceName = cmd.getOptionValue("name");
 		String sourceFile = cmd.getOptionValue("input");
 		String outputFile = cmd.getOptionValue("output");
-		String mode = cmd.getOptionValue("mode");
-		int status = 2;
-		if(mode.equalsIgnoreCase(BACKGROUND)) {
-			status = compileBackground(resourceName, sourceFile, outputFile);
+		Modes mode = null;
+		try {
+			mode = Modes.valueOf(cmd.getOptionValue("mode"));
+		} catch (IllegalArgumentException e) {
+			mode=Modes.UNKNOWN;
 		}
-		else if(mode.equalsIgnoreCase(SPRITESHEET)) {
-			int width = Integer.parseInt(cmd.getOptionValue("width"));
-			int height = Integer.parseInt(cmd.getOptionValue("height"));
-			status = compileSpriteSheet(resourceName, sourceFile, width, height, outputFile);
-		}
-		else if(mode.equalsIgnoreCase(SCREENSHOOT)) {
-			status = extractScreenshoot(sourceFile, outputFile);
-		}
-		else if(mode.equalsIgnoreCase(BINARY)) {
-			status = compileBinary(resourceName, sourceFile, outputFile);
-		}
-		else if(mode.equalsIgnoreCase(FONT)) {
-			int width = Integer.parseInt(cmd.getOptionValue("width"));
-			int height = Integer.parseInt(cmd.getOptionValue("height"));
-			status = compileFont(resourceName, sourceFile, width, height, outputFile);
-		}
-		else if(mode.equalsIgnoreCase(SIGNER)) {
-			String title = cmd.getOptionValue("title");
-			String description = cmd.getOptionValue("description");
-			if(StringUtils.isBlank(title)) {
-				System.out.println("title is mandatory");
-				System.exit(1);
-			}
-			if(StringUtils.isBlank(description)) {
-				System.out.println("description is mandatory");
-				System.exit(1);
-			}
-			status = signBinary(resourceName, sourceFile, outputFile, title, description);
-		}
-		else if(mode.equalsIgnoreCase(VERIFY)) {
-			status = verifySign(resourceName, sourceFile, outputFile);
-		}
-		else if(mode.equalsIgnoreCase(STAMP)) {
-			status = stampStr(sourceFile, resourceName, outputFile);
-		}
-		else {
-			System.out.println("Unknown mode");
-			status = 2;
+		int status;
+		int width;
+		int height;
+
+		switch (mode) {
+			case BACKGROUND:
+				status = compileBackground(resourceName, sourceFile, outputFile);
+				break;
+			case SPRITESHEET:
+				width = Integer.parseInt(cmd.getOptionValue("width"));
+				height = Integer.parseInt(cmd.getOptionValue("height"));
+				status = compileSpriteSheet(resourceName, sourceFile, width, height, outputFile);
+				break;
+			case SCREENSHOOT:
+				status = extractScreenshoot(sourceFile, outputFile);
+				break;
+			case BINARY:
+				status = compileBinary(resourceName, sourceFile, outputFile);
+			break;
+			case FONT:
+				width = Integer.parseInt(cmd.getOptionValue("width"));
+				height = Integer.parseInt(cmd.getOptionValue("height"));
+				status = compileFont(resourceName, sourceFile, width, height, outputFile);
+				break;
+			case SIGNER:
+				String title = cmd.getOptionValue("title");
+				String description = cmd.getOptionValue("description");
+				if(StringUtils.isBlank(title)) {
+					System.out.println("title is mandatory");
+					System.exit(1);
+				}
+				if(StringUtils.isBlank(description)) {
+					System.out.println("description is mandatory");
+					System.exit(1);
+				}
+				status = signBinary(resourceName, sourceFile, outputFile, title, description);
+				break;
+			case VERIFY:
+				status = verifySign(resourceName, sourceFile, outputFile);
+				break;
+			case STAMP:
+				status = stampStr(sourceFile, resourceName, outputFile);
+				break;
+			case UNKNOWN:
+			default:
+				System.out.println("Unknown mode");
+				status = 2;
+				break;
+
 		}
 		System.exit(status);
-
 	}
 
 	private static int compileBinary(String resourceName, String sourceFile, String outputFile) {
