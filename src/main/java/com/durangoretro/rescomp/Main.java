@@ -3,6 +3,8 @@ package com.durangoretro.rescomp;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Locale;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -11,53 +13,28 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang.StringUtils;
+
+import static com.durangoretro.rescomp.Status.*;
 
 public class Main {
 
-	private static final String BACKGROUND = "BACKGROUND";
-	private static final String SPRITESHEET = "SPRITESHEET";
-	private static final String SCREENSHOOT = "SCREENSHOOT";
-	private static final String BINARY = "BINARY";
-	private static final String FONT = "FONT";
-	private static final String SIGNER = "SIGNER";
-	private static final String VERIFY = "VERIFY";
-	private static final String STAMP = "STAMP";
-	
+	private static final String RESCOMP="rescomp";
+	private static final String NAME="name";
+	private static final String INPUT="input";
+	private static final String OUTPUT="output";
+	private static final String MODE="mode";
+	private static final String WIDTH="width";
+	private static final String HEIGHT="height";
+	public static final String TITLE = "title";
+	public static final String DESCRIPTION = "description";
+
+
+
 
 	public static void main(String[] args) {
-		Options options = new Options();
 
-		Option resourceOption = new Option("n", "name", true, "Resource name");
-		resourceOption.setRequired(true);
-		options.addOption(resourceOption);
-
-		Option inputOption = new Option("i", "input", true, "File input");
-		inputOption.setRequired(true);
-		options.addOption(inputOption);
-
-		Option outputOption = new Option("o", "output", true, "File output");
-		outputOption.setRequired(true);
-		options.addOption(outputOption);
-
-		Option modeOption = new Option("m", "mode", true, "Working mode, BACKGROUND");
-		modeOption.setRequired(true);
-		options.addOption(modeOption);
-		
-		Option widthOption = new Option("w", "width", true, "Sprite width");
-		widthOption.setRequired(false);
-		options.addOption(widthOption);
-		
-		Option heightOption = new Option("h", "height", true, "Sprite height");
-		heightOption.setRequired(false);
-		options.addOption(heightOption);
-		
-		Option titleOption = new Option("t", "title", true, "Game title");
-		titleOption.setRequired(false);
-		options.addOption(titleOption);
-		
-		Option descriptionOption = new Option("d", "description", true, "Game description");
-		descriptionOption.setRequired(false);
-		options.addOption(descriptionOption);
+		Options options =generateOptions();
 
 
 		CommandLineParser parser = new DefaultParser();
@@ -68,89 +45,127 @@ public class Main {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
 			System.out.println(e.getMessage());
-			formatter.printHelp("utility-name", options);
+			formatter.printHelp(RESCOMP, options);
 
-			System.exit(1);
+			System.exit(INVALID_PARAMETERS.getCode());
 		}
 
-		String resourceName = cmd.getOptionValue("name");
-		String sourceFile = cmd.getOptionValue("input");
-		String outputFile = cmd.getOptionValue("output");
-		String mode = cmd.getOptionValue("mode");
-		int status = 2;
-		if(mode.equalsIgnoreCase(BACKGROUND)) {
-			status = compileBackground(resourceName, sourceFile, outputFile);
+		String resourceName = cmd.getOptionValue(NAME);
+		String sourceFile = cmd.getOptionValue(INPUT);
+		String outputFile = cmd.getOptionValue(OUTPUT);
+		Modes mode;
+		try {
+			mode = Modes.valueOf(cmd.getOptionValue(MODE).toUpperCase(Locale.ROOT));
+		} catch (IllegalArgumentException e) {
+			mode=Modes.UNKNOWN;
 		}
-		else if(mode.equalsIgnoreCase(SPRITESHEET)) {
-			int width = Integer.parseInt(cmd.getOptionValue("width"));
-			int height = Integer.parseInt(cmd.getOptionValue("height"));
-			status = compileSpriteSheet(resourceName, sourceFile, width, height, outputFile);
-		}
-		else if(mode.equalsIgnoreCase(SCREENSHOOT)) {
-			status = extractScreenshoot(sourceFile, outputFile);
-		}
-		else if(mode.equalsIgnoreCase(BINARY)) {
-			status = compileBinary(resourceName, sourceFile, outputFile);
-		}
-		else if(mode.equalsIgnoreCase(FONT)) {
-			int width = Integer.parseInt(cmd.getOptionValue("width"));
-			int height = Integer.parseInt(cmd.getOptionValue("height"));
-			status = compileFont(resourceName, sourceFile, width, height, outputFile);
-		}
-		else if(mode.equalsIgnoreCase(SIGNER)) {
-			String title = cmd.getOptionValue("title");
-			String description = cmd.getOptionValue("description");
-			if(title==null || title.isBlank()) {
-				System.out.println("title is mandatory");
-				System.exit(1);
-			}
-			if(description==null || description.isBlank()) {
-				System.out.println("description is mandatory");
-				System.exit(1);
-			}
-			status = signBinary(resourceName, sourceFile, outputFile, title, description);
-		}
-		else if(mode.equalsIgnoreCase(VERIFY)) {
-			status = verifySign(resourceName, sourceFile, outputFile);
-		}
-		else if(mode.equalsIgnoreCase(STAMP)) {
-			status = stampStr(sourceFile, resourceName, outputFile);
-		}
-		else {
-			System.out.println("Unknown mode");
-			status = 2;
-		}
-		System.exit(status);
+		Status status;
+		int width;
+		int height;
 
+		switch (mode) {
+			case BACKGROUND:
+				status = compileBackground(resourceName, sourceFile, outputFile);
+				break;
+			case SPRITESHEET:
+
+				width = getRequiredOption(cmd,WIDTH);
+				height = getRequiredOption(cmd,HEIGHT);
+				status = compileSpriteSheet(resourceName, sourceFile, width, height, outputFile);
+				break;
+			case SCREENSHOOT:
+				status = extractScreenshoot(sourceFile, outputFile);
+				break;
+			case BINARY:
+				status = compileBinary(sourceFile, outputFile);
+			break;
+			case FONT:
+				width = getRequiredOption(cmd,WIDTH);
+				height = getRequiredOption(cmd,HEIGHT);
+
+				status = compileFont(resourceName, sourceFile, width, height, outputFile);
+				break;
+			case SIGNER:
+				String title = cmd.getOptionValue(TITLE);
+				String description = cmd.getOptionValue(DESCRIPTION);
+				if(StringUtils.isBlank(title)) {
+					System.out.println("title is mandatory");
+					System.exit(INVALID_PARAMETERS.getCode());
+				}
+				if(StringUtils.isBlank(description)) {
+					System.out.println("description is mandatory");
+					System.exit(INVALID_PARAMETERS.getCode());
+				}
+				status = signBinary(resourceName, sourceFile, outputFile, title, description);
+				break;
+			case VERIFY:
+				status = verifySign(sourceFile);
+				break;
+			case STAMP:
+				status = stampStr(sourceFile, resourceName, outputFile);
+				break;
+			case UNKNOWN:
+			default:
+				System.out.println("Unknown mode");
+				status = Status.UNKNOWMODE;
+				break;
+
+		}
+		System.exit(status.getCode());
 	}
 
-	private static int compileBinary(String resourceName, String sourceFile, String outputFile) {
+	private static int getRequiredOption(CommandLine cmd,String key){
+		String strOpt = cmd.getOptionValue(key);
+		if(StringUtils.isBlank(strOpt)){
+			System.out.println("Required Option "+key);
+			System.exit(INVALID_PARAMETERS.getCode());
+		}
+		return Integer.parseInt(strOpt);
+	}
+
+	private static Options generateOptions(){
+		Options options=new Options();
+
+		Arrays.stream(com.durangoretro.rescomp.Options.values())
+				.forEach(
+						options1 ->
+						{
+							Option option = new Option(options1.getOpt(),options1.getLongOpt(),options1.getHasArgs(),options1.getDescription());
+							option.setRequired(options1.getRequired());
+							options.addOption(option);
+						}
+				);
+		return options;
+	}
+
+	private static Status compileBinary(String sourceFile, String outputFile) {
+
 		try {
 			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
-			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			FileOutputStream out = new FileOutputStream(outputFile);
 			out.write(ImageGenerator.getHexString(outputFile, mem).getBytes());
 			out.close();
-			return 0;
+			return OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 3;
+			return ERROR;
 		}
 	}
 
-	private static int extractScreenshoot(String sourceFile, String outputFile) {
+	private static Status extractScreenshoot(String sourceFile, String outputFile) {
 		try {
 			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
-			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			FileOutputStream out = new FileOutputStream(outputFile);
 			ScreenshootExtractor.generatePng(mem, out);
 			out.close();
-			return 0;
+			return OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 3;
+			return ERROR;
 		}
 	}
 
-	private static int compileBackground(String resourceName, String sourceFile, String outputFile) {
+	private static Status compileBackground(String resourceName, String sourceFile, String outputFile) {
 		try {
 			final File file = new File(sourceFile);
 			byte[] pixels = ImageGenerator.convertToDurango(file);
@@ -158,40 +173,40 @@ public class Main {
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
 			out.write(ImageGenerator.getHexString(resourceName, encoded).getBytes());	        
 			out.close();
-			return 0;
+			return OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 3;
+			return ERROR;
 		}
 	}
 
-	private static int compileSpriteSheet(String resourceName, String sourceFile, int spriteWidth, int spriteHeight, String outputFile) {
+	private static Status compileSpriteSheet(String resourceName, String sourceFile, int spriteWidth, int spriteHeight, String outputFile) {
 		try {
 			final File file = new File(sourceFile);
-			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			FileOutputStream out = new FileOutputStream(outputFile);
 			out.write(ImageGenerator.compileSpriteSheet(file, spriteWidth, spriteHeight, resourceName).getBytes());
 			out.close();
-			return 0;
+			return OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 3;
+			return ERROR;
 		}
 	}
 	
-	private static int compileFont(String resourceName, String sourceFile, int fontWidth, int fontHeight, String outputFile) {
+	private static Status compileFont(String resourceName, String sourceFile, int fontWidth, int fontHeight, String outputFile) {
 		try {
 			final File file = new File(sourceFile);
-			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			FileOutputStream out = new FileOutputStream(outputFile);
 			out.write(ImageGenerator.compileFont(file, fontWidth, fontHeight, resourceName).getBytes());
 			out.close();
-			return 0;
+			return OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 3;
+			return ERROR;
 		}
 	}
 	
-	private static int signBinary(String resourceName, String sourceFile, String outputFile, String title, String description) {
+	private static Status signBinary(String resourceName, String sourceFile, String outputFile, String title, String description) {
 		try {
 			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
 			Stamper.stampStrValue(mem, Stamper.BUILD_STAMP, resourceName);
@@ -203,26 +218,26 @@ public class Main {
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
 			out.write(mem);
 			out.close();
-			return 0;
+			return OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 3;
+			return ERROR;
 		}
 	}
 	
-	private static int verifySign(String resourceName, String sourceFile, String outputFile) {
+	private static Status verifySign(String sourceFile) {
 		try {
 			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
 			Signer.sign(mem);
 			
-			return 0;
+			return OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 3;
+			return ERROR;
 		}
 	}
 	
-	private static int stampStr(String romFile, String stampName, String stampValue) {
+	private static Status stampStr(String romFile, String stampName, String stampValue) {
 		try {
 			File file = new File(romFile);
 			byte[] mem = Files.readAllBytes(file.toPath());
@@ -230,10 +245,10 @@ public class Main {
 			FileOutputStream out = new FileOutputStream(file);
 			out.write(mem);
 			out.close();
-			return 0;
+			return OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 3;
+			return ERROR;
 		}
 	}
 
