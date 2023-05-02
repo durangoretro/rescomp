@@ -68,8 +68,9 @@ public class Main {
 				status = compileBackground(resourceName, sourceFile, outputFile);
 				break;
 			case SPRITESHEET:
-				width = Integer.parseInt(cmd.getOptionValue(WIDTH));
-				height = Integer.parseInt(cmd.getOptionValue(HEIGHT));
+
+				width = getRequiredOption(cmd,WIDTH);
+				height = getRequiredOption(cmd,HEIGHT);
 				status = compileSpriteSheet(resourceName, sourceFile, width, height, outputFile);
 				break;
 			case SCREENSHOOT:
@@ -79,8 +80,9 @@ public class Main {
 				status = compileBinary(sourceFile, outputFile);
 			break;
 			case FONT:
-				width = Integer.parseInt(cmd.getOptionValue(WIDTH));
-				height = Integer.parseInt(cmd.getOptionValue(HEIGHT));
+				width = getRequiredOption(cmd,WIDTH);
+				height = getRequiredOption(cmd,HEIGHT);
+
 				status = compileFont(resourceName, sourceFile, width, height, outputFile);
 				break;
 			case SIGNER:
@@ -110,6 +112,15 @@ public class Main {
 
 		}
 		System.exit(status.getCode());
+	}
+
+	private static int getRequiredOption(CommandLine cmd,String key){
+		String strOpt = cmd.getOptionValue(key);
+		if(StringUtils.isBlank(strOpt)){
+			System.out.println("Required Option "+key);
+			System.exit(INVALID_PARAMETERS.getCode());
+		}
+		return Integer.parseInt(strOpt);
 	}
 
 	private static Options generateOptions(){
@@ -185,7 +196,7 @@ public class Main {
 	private static Status compileFont(String resourceName, String sourceFile, int fontWidth, int fontHeight, String outputFile) {
 		try {
 			final File file = new File(sourceFile);
-			FileOutputStream out = new FileOutputStream(new File(outputFile));
+			FileOutputStream out = new FileOutputStream(outputFile);
 			out.write(ImageGenerator.compileFont(file, fontWidth, fontHeight, resourceName).getBytes());
 			out.close();
 			return OK;
