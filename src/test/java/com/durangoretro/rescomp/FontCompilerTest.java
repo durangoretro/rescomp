@@ -35,8 +35,8 @@ public class FontCompilerTest {
             Main.main(args);
         });
         Assertions.assertEquals(Status.OK.getCode(),statusCode);
-        File expectedFile=new File("src/test/resources/witch.sign.dux");
-        File actualFile=new File("target/witch.sign.dux");
+        File expectedFile=new File("src/test/resources/font.h");
+        File actualFile=new File("target/font.h");
         org.assertj.core.api.Assertions.assertThat(actualFile).hasBinaryContent(Files.readAllBytes(expectedFile.toPath()));
     }
 }
