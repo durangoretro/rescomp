@@ -31,7 +31,7 @@ public class SpriteSheetCompilerTest {
     void testSpriteSheet()throws Exception{
         int statusCode = SystemLambda.catchSystemExit(()-> {
             String[] args = {"-n", "testsprite", "-m", "SPRITESHEET", "-i", "src/test/resources/sprites.png", "-o", "target/sprites.h"
-                    , "-w", "27", "-h", "30"};
+                    , "-w", "30", "-h", "27"};
             Main.main(args);
         });
         Assertions.assertEquals(Status.OK.getCode(),statusCode);
