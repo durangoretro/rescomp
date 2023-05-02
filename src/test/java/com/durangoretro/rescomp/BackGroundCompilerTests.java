@@ -9,7 +9,7 @@ import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BackGroundCompilerTest {
+public class BackGroundCompilerTests {
 
     @Test
     void testInvalidOptions()throws Exception{
