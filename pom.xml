@@ -49,6 +49,8 @@
 									jar-with-dependencies
 								</descriptorRef>
 							</descriptorRefs>
+                            <finalName>rescomp</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
 						</configuration>
 					</execution>
 				</executions>
