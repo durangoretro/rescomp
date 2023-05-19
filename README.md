@@ -2,7 +2,7 @@
 
 [![Java CI with Maven](https://github.com/durangoretro/rescomp/actions/workflows/maven.yml/badge.svg)](https://github.com/durangoretro/rescomp/actions/workflows/maven.yml)
 
-Rescomp is a java application Based on [SGDK](https://github.com/Stephane-D/SGDK)'s rescomp. This Java Based tool allows to generate all the binary information to import any resource (image, sprite...) also, this tool allows you to sign any ROM created for Durango.
+Rescomp is a java application Based on [SGDK](https://github.com/Stephane-D/SGDK)'s rescomp. This Java Based tool allows to generate all the binary information to import any resource (image, sprite...) also, this tool allows you to sign any ROM created for Durango [using the C programming language](https://github.com/durangoretro/DurangoLib).
 
 To Run _rescomp_ you can use the next approach.
 
