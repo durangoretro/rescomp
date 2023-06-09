@@ -214,6 +214,7 @@ public class Main {
 			DXHead.copyBuildHashs(mem);
 			DXHead.setVersion(mem, "");
 			DXHead.setTimestamp(mem);
+            DXHead.setRomSize(mem);
 			Signer.sign(mem);
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
 			out.write(mem);

@@ -8,6 +8,7 @@ public class DXHead {
 	public static final int HASHS_OFFSET = 0x00E6;
 	public static final int VERSION_OFFSET = 0x00F6;
 	public static final int TIMESTAMP_OFFSET = 0x00F8;
+    public static final int ROMSIZE_OFFSET = 0x00FC;
 
 	public static void stampTitleDescription(byte[] rom, String title, String description) throws Exception {
 		int offset = COMMENTS_OFFSET;
@@ -71,4 +72,21 @@ public class DXHead {
 		rom[TIMESTAMP_OFFSET]=(byte) time;
 		rom[TIMESTAMP_OFFSET+1]=(byte) date;
 	}
+    
+    public static void setRomSize(byte[] rom) {
+        if(rom.length==16384) {
+            System.out.println("Rom size: 16Kb");
+            rom[HASHS_OFFSET]=(byte)0x00;
+            rom[HASHS_OFFSET+1]=(byte)0x40;
+            rom[HASHS_OFFSET+2]=(byte)0x00;
+            rom[HASHS_OFFSET+3]=(byte)0x00;
+        }
+        else if(rom.length==32768) {
+            System.out.println("Rom size: 32Kb");
+            rom[HASHS_OFFSET]=(byte)0x00;
+            rom[HASHS_OFFSET+1]=(byte)0x80;
+            rom[HASHS_OFFSET+2]=(byte)0x00;
+            rom[HASHS_OFFSET+3]=(byte)0x00;
+        }
+    }
 }
