@@ -104,6 +104,9 @@ public class Main {
 			case STAMP:
 				status = stampStr(sourceFile, resourceName, outputFile);
 				break;
+			case MUSIC:
+				status = compileMusic(resourceName, sourceFile, outputFile);
+				break;
 			case UNKNOWN:
 			default:
 				System.out.println("Unknown mode");
@@ -143,7 +146,7 @@ public class Main {
 		try {
 			byte[] mem = Files.readAllBytes(new File(sourceFile).toPath());
 			FileOutputStream out = new FileOutputStream(outputFile);
-			out.write(ImageGenerator.getHexString(outputFile, mem).getBytes());
+			out.write(Util.getHexString(outputFile, mem).getBytes());
 			out.close();
 			return OK;
 		} catch (Exception e) {
@@ -171,7 +174,7 @@ public class Main {
 			byte[] pixels = ImageGenerator.convertToDurango(file);
 			byte [] encoded = new RLEEncoder().encode(2, pixels);
 			FileOutputStream out = new FileOutputStream(new File(outputFile));
-			out.write(ImageGenerator.getHexString(resourceName, encoded).getBytes());	        
+			out.write(Util.getHexString(resourceName, encoded).getBytes());	        
 			out.close();
 			return OK;
 		} catch (Exception e) {
@@ -245,6 +248,19 @@ public class Main {
 			Stamper.stampStrValue(mem, stampName+":[", stampValue);
 			FileOutputStream out = new FileOutputStream(file);
 			out.write(mem);
+			out.close();
+			return OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ERROR;
+		}
+	}
+	
+	private static Status compileMusic(String resourceName, String sourceFile, String outputFile) {
+		try {
+			final File file = new File(sourceFile);
+			FileOutputStream out = new FileOutputStream(outputFile);
+			out.write(Util.getHexString(resourceName, MusicGenerator.convertToDurango(file)).getBytes());
 			out.close();
 			return OK;
 		} catch (Exception e) {
