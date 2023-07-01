@@ -27,8 +27,9 @@ public class MusicGenerator {
 			while(notesIterator.hasNext()) {
 				Element note = notesIterator.next();
 				String step = note.element("pitch").element("step").getStringValue();
+				String octave = note.element("pitch").element("octave").getStringValue();
 				Integer duration = Integer.parseInt(note.element("duration").getStringValue());
-				System.out.println("NOTA: " + step + " -> "+ duration);
+				System.out.println("NOTA: " + step + octave + " -> "+ duration);
 			}
 		}
 		
