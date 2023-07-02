@@ -2,6 +2,8 @@ package com.durangoretro.rescomp;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -12,6 +14,7 @@ public class MusicGenerator {
 
 	public static byte[] convertToDurango(File file) throws Exception {
 		Integer divisions = 1;
+		List<MusicNote> notes = new LinkedList<>();
 		SAXReader xmlReader = new SAXReader();
 		Document doc = xmlReader.read(file);
 		
@@ -29,12 +32,39 @@ public class MusicGenerator {
 				String step = note.element("pitch").element("step").getStringValue();
 				String octave = note.element("pitch").element("octave").getStringValue();
 				Integer duration = Integer.parseInt(note.element("duration").getStringValue());
-				System.out.println("NOTA: " + step + octave + " -> "+ duration);
+				notes.add(new MusicNote(Notes.valueOf(step+octave), 1));
+			}
+			
+			for(MusicNote n : notes) {
+				System.out.println("NOTA: " + n.getNote().name + " -> "+ n.getDuration());
 			}
 		}
 		
 		byte pixels[] = new byte[10];
 		return pixels;
+	}
+	
+	public static class MusicNote {
+		private Notes note;
+		private Integer duration;
+		
+		public MusicNote(Notes note, Integer duration) {
+			super();
+			this.note = note;
+			this.duration = duration;
+		}
+		public Notes getNote() {
+			return note;
+		}
+		public void setNote(Notes note) {
+			this.note = note;
+		}
+		public Integer getDuration() {
+			return duration;
+		}
+		public void setDuration(Integer duration) {
+			this.duration = duration;
+		}		
 	}
 
 }
