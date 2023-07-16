@@ -37,5 +37,9 @@ public enum Modes {
     /**
      * Stamp Mode
      */
-    STAMP
+    STAMP,
+    /**
+     * Convert music XML files
+     */
+    MUSIC
 }
