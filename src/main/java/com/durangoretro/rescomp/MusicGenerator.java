@@ -31,10 +31,18 @@ public class MusicGenerator {
 			Iterator<Element> notesIterator = measure.elementIterator("note");
 			while(notesIterator.hasNext()) {
 				Element note = notesIterator.next();
-				String step = note.element("pitch").element("step").getStringValue();
-				String octave = note.element("pitch").element("octave").getStringValue();
-				Integer duration = Integer.parseInt(note.element("duration").getStringValue());
-				notes.add(new MusicNote(Notes.valueOf(step+octave), WHOLE_NOTE/4/divisions*duration));
+				// Note
+				if(note.element("rest")==null) {
+					String step = note.element("pitch").element("step").getStringValue();
+					String octave = note.element("pitch").element("octave").getStringValue();
+					Integer duration = Integer.parseInt(note.element("duration").getStringValue());
+					notes.add(new MusicNote(Notes.valueOf(step+octave), WHOLE_NOTE/4/divisions*duration));
+				}
+				// Silence
+				else {
+					Integer duration = Integer.parseInt(note.element("duration").getStringValue());
+					notes.add(new MusicNote(Notes.REST, WHOLE_NOTE/4/divisions*duration));
+				}
 			}
 		}
 		
