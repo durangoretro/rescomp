@@ -16,7 +16,7 @@ public class MusicGenerator {
 
 	public static byte[] convertToDurango(File file) throws Exception {
 		Integer divisions = 1;
-		List<MusicNote> notes = new LinkedList<>();
+		LinkedList<MusicNote> notes = new LinkedList<>();
 		SAXReader xmlReader = new SAXReader();
 		Document doc = xmlReader.read(file);
 		
@@ -31,17 +31,22 @@ public class MusicGenerator {
 			Iterator<Element> notesIterator = measure.elementIterator("note");
 			while(notesIterator.hasNext()) {
 				Element note = notesIterator.next();
+				Integer duration = Integer.parseInt(note.element("duration").getStringValue());
+				int noteDuration = WHOLE_NOTE/4/divisions*duration;
 				// Note
 				if(note.element("rest")==null) {
 					String step = note.element("pitch").element("step").getStringValue();
 					String octave = note.element("pitch").element("octave").getStringValue();
-					Integer duration = Integer.parseInt(note.element("duration").getStringValue());
-					notes.add(new MusicNote(Notes.valueOf(step+octave), WHOLE_NOTE/4/divisions*duration));
+					Notes notePitch = Notes.valueOf(step+octave);
+					// If current note is equals that previous one, add a little rest
+					if(!notes.isEmpty() && notes.getLast().getNote().equals(notePitch)) {
+						notes.add(new MusicNote(Notes.REST, WHOLE_NOTE/32));
+					}
+					notes.add(new MusicNote(notePitch, noteDuration));
 				}
 				// Silence
 				else {
-					Integer duration = Integer.parseInt(note.element("duration").getStringValue());
-					notes.add(new MusicNote(Notes.REST, WHOLE_NOTE/4/divisions*duration));
+					notes.add(new MusicNote(Notes.REST, noteDuration));
 				}
 			}
 		}
