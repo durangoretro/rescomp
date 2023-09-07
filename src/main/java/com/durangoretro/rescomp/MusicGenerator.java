@@ -40,7 +40,7 @@ public class MusicGenerator {
 					Notes notePitch = Notes.valueOf(step+octave);
 					// If current note is equals that previous one, add a little rest
 					if(!notes.isEmpty() && notes.getLast().getNote().equals(notePitch)) {
-						notes.add(new MusicNote(Notes.REST, WHOLE_NOTE/32));
+						notes.add(new MusicNote(Notes.REST, 4));
 					}
 					notes.add(new MusicNote(notePitch, noteDuration));
 				}
