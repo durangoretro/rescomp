@@ -48,7 +48,7 @@ public enum Notes {
 	AS6("AS6", 41),
 	B6("B6", 42),
 
-	BLENCE("BLENCE",  43);
+	REST("REST",  43);
 	
 	public final String name;
 	public final Integer value;
