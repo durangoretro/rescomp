@@ -107,6 +107,9 @@ public class Main {
 			case MUSIC:
 				status = compileMusic(resourceName, sourceFile, outputFile);
 				break;
+			case WORDS:
+				status = compileWords(resourceName, sourceFile, outputFile);
+				break;
 			case UNKNOWN:
 			default:
 				System.out.println("Unknown mode");
@@ -261,6 +264,19 @@ public class Main {
 			final File file = new File(sourceFile);
 			FileOutputStream out = new FileOutputStream(outputFile);
 			out.write(Util.getHexString(resourceName, MusicGenerator.convertToDurango(file)).getBytes());
+			out.close();
+			return OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ERROR;
+		}
+	}
+	
+	private static Status compileWords(String resourceName, String sourceFile, String outputFile) {
+		try {
+			final File file = new File(sourceFile);
+			FileOutputStream out = new FileOutputStream(outputFile);
+			out.write(Util.getHexString(resourceName, WordsGenerator.convertToDurango(file)).getBytes());
 			out.close();
 			return OK;
 		} catch (Exception e) {

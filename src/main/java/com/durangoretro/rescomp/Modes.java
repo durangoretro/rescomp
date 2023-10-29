@@ -41,5 +41,9 @@ public enum Modes {
     /**
      * Convert music XML files
      */
-    MUSIC
+    MUSIC,
+    /**
+     * Convert word list
+     */
+    WORDS,
 }
