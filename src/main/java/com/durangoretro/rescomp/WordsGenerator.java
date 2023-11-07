@@ -20,6 +20,7 @@ public class WordsGenerator {
 				}
 			}
 		}
+        size++;
 
 		byte pixels[] = new byte[size];
 		int i=0;
@@ -29,7 +30,7 @@ public class WordsGenerator {
 			}
 			pixels[i++]=(byte) 0;
 		}
-
+        pixels[i++]=(byte) 23;
 
 		return pixels;
 	}
