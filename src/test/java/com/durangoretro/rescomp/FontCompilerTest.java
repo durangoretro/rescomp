@@ -37,6 +37,6 @@ public class FontCompilerTest {
         Assertions.assertEquals(Status.OK.getCode(),statusCode);
         File expectedFile=new File("src/test/resources/font.h");
         File actualFile=new File("target/font.h");
-        org.assertj.core.api.Assertions.assertThat(actualFile).hasBinaryContent(Files.readAllBytes(expectedFile.toPath()));
+        org.assertj.core.api.Assertions.assertThat(actualFile).hasContent(Files.readString(expectedFile.toPath()));
     }
 }

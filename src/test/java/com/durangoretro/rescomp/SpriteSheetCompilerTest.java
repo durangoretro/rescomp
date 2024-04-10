@@ -37,6 +37,6 @@ public class SpriteSheetCompilerTest {
         Assertions.assertEquals(Status.OK.getCode(),statusCode);
         File expectedFile=new File("src/test/resources/sprites.h");
         File actualFile=new File("target/sprites.h");
-        org.assertj.core.api.Assertions.assertThat(actualFile).hasBinaryContent(Files.readAllBytes(expectedFile.toPath()));
+        org.assertj.core.api.Assertions.assertThat(actualFile).hasContent(Files.readString(expectedFile.toPath()));
     }
 }
