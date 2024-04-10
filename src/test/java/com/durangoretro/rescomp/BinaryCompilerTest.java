@@ -19,6 +19,6 @@ public class BinaryCompilerTest {
 
         File expectedFile = new File("src/test/resources/binary.h");
         File actualFile = new File("target/binary.h");
-        org.assertj.core.api.Assertions.assertThat(actualFile).hasBinaryContent(Files.readAllBytes(expectedFile.toPath()));
+        org.assertj.core.api.Assertions.assertThat(actualFile).hasContent(Files.readString(expectedFile.toPath()));
     }
 }

@@ -19,6 +19,6 @@ public class MusicCompilerTest {
         Assertions.assertEquals(Status.OK.getCode(),statusCode);
         File expectedFile = new File("src/test/resources/testmusic.h");
         File actualFile = new File("target/testmusic.h");
-        org.assertj.core.api.Assertions.assertThat(actualFile).hasBinaryContent(Files.readAllBytes(expectedFile.toPath()));
+        org.assertj.core.api.Assertions.assertThat(actualFile).hasContent(Files.readString(expectedFile.toPath()));
     }
 }

@@ -37,14 +37,14 @@ public class BackGroundCompilerTests {
     @Test
     void testCompileBackGround()throws Exception{
         int statusCode = SystemLambda.catchSystemExit(() -> {
-            String[] args = {"-m", "BACKGROUNd", "-n", "testBackground", "-i", "src/test/resources/background.png", "-o", "target/background.h"};
+            String[] args = {"-m", "BACKGROUND", "-n", "testBackground", "-i", "src/test/resources/background.png", "-o", "target/background.h"};
             Main.main(args);
 
         });
         assertEquals(0,statusCode);
         File expectedFile=new File("src/test/resources/background.h");
         File actualFile=new File("target/background.h");
-        Assertions.assertThat(actualFile).hasBinaryContent(Files.readAllBytes(expectedFile.toPath()));
+        Assertions.assertThat(actualFile).hasContent(Files.readString(expectedFile.toPath()));
     }
 
 
